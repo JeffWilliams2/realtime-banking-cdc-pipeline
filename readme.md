@@ -27,61 +27,6 @@
 ### Problem Statement
 Traditional batch ETL processes introduce latency between operational events and analytics, limiting real-time decision making. Business teams need immediate visibility into banking transactions, account changes, and customer updates to detect fraud, monitor cash flow, and respond to customer needs.
 
-### Solution Architecture
-
-<details>
-<summary>📊 Click to view full architecture diagram</summary>
-
-![Pipeline Architecture](docs/images/screenshot-banking-pipeline.png)
-
-</details>
-
-### Architecture (Text Representation)
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│                   Source System (OLTP)                       │
-│          PostgreSQL + Faker Data Generator                   │
-│              (Customers, Accounts, Transactions)             │
-└──────────────────────────┬──────────────────────────────────┘
-                           ▼
-┌─────────────────────────────────────────────────────────────┐
-│                   Change Data Capture                        │
-│         Debezium Postgres Connector (WAL Reader)             │
-│              Captures INSERT/UPDATE/DELETE                   │
-└──────────────────────────┬──────────────────────────────────┘
-                           ▼
-┌─────────────────────────────────────────────────────────────┐
-│                    Event Streaming Layer                     │
-│          Apache Kafka (3 brokers, replication=3)             │
-│             Guaranteed Delivery, Fault Tolerance             │
-└──────────────────────────┬──────────────────────────────────┘
-                           ▼
-┌─────────────────────────────────────────────────────────────┐
-│                   Staging Layer                              │
-│        MinIO (S3-compatible Object Storage)                  │
-│          Batching, Replay Capability, Cost Control           │
-└──────────────────────────┬──────────────────────────────────┘
-                           ▼
-┌─────────────────────────────────────────────────────────────┐
-│           Data Warehouse (Lakehouse Architecture)            │
-│    Snowflake: Bronze → Silver → Gold (Medallion)             │
-│         Auto-scaling, Time Travel, Zero-copy Clone           │
-└──────────────────────────┬──────────────────────────────────┘
-                           ▼
-┌─────────────────────────────────────────────────────────────┐
-│            Transformation & Orchestration                    │
-│       DBT (dimensional modeling, tests, documentation)       │
-│       Airflow (DAG scheduling, SCD snapshots, monitoring)    │
-└──────────────────────────┬──────────────────────────────────┘
-                           ▼
-┌─────────────────────────────────────────────────────────────┐
-│              Analytics & Business Intelligence               │
-│          Power BI, Tableau, SQL Analytics Workbench          │
-│             Customer 360, Fraud Detection, KPIs              │
-└─────────────────────────────────────────────────────────────┘
-```
-
 ### Medallion Architecture
 
 | Layer | Purpose | Data Characteristics | Retention |
@@ -792,7 +737,7 @@ Airflow DAG for Bronze layer loading:
 
 ### 1. Clone Repository
 ```bash
-git clone https://github.com/JeffWilliams2/realtime-banking-cdc-pipeline.git
+git clone https://github.com/jeffwilliams2/realtime-banking-cdc-pipeline.git
 cd realtime-banking-cdc-pipeline
 ```
 
@@ -917,9 +862,8 @@ MIT License - feel free to use for learning or commercial purposes.
 
 ## Contact
 
-**Jeff Williams** - Data Engineer   
-💻 [GitHub](https://github.com/jeffwilliams)  
-📝 [Blog Post (Extended Version)](./blog-post.md)
+**Jeff Williams** - Data Engineer  
+[GitHub](https://github.com/jeffwilliams2)
 
 ---
 
