@@ -659,7 +659,7 @@ realtime-banking-cdc-pipeline/
 ├── consumer/
 │   └── kafka_to_minio.py       # Python: Consume Kafka → batch to MinIO
 ├── data-generator/
-│   └── faker_generator.py      # Synthetic banking data generator
+│   └── fake_generator.py       # Synthetic banking data generator
 ├── docker/
 │   ├── dags/                   # Airflow DAGs
 │   │   ├── minio_to_snowflake_dag.py  # Load Bronze layer
@@ -765,7 +765,7 @@ docker-compose ps
 docker exec -i postgres psql -U postgres < postgres/schema.sql
 
 # Generate synthetic data
-docker exec -it data-generator python faker_generator.py --records 10000
+docker exec -it data-generator python fake_generator.py --records 10000
 ```
 
 ### 5. Configure Debezium CDC
