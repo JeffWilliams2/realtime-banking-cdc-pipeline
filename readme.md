@@ -792,7 +792,7 @@ Airflow DAG for Bronze layer loading:
 
 ### 1. Clone Repository
 ```bash
-git clone https://github.com/yourusername/realtime-banking-cdc-pipeline.git
+git clone https://github.com/JeffWilliams2/realtime-banking-cdc-pipeline.git
 cd realtime-banking-cdc-pipeline
 ```
 

@@ -179,6 +179,6 @@ Snowflake warehouses that stay running 24/7 for real-time loads can become expen
 
 ## Links
 
-- <LinkWithLabel label="GitHub Repository" href="https://github.com/yourusername/realtime-banking-cdc-pipeline" title="Source code and documentation" />
-- <LinkWithLabel label="Architecture Diagram" href="https://github.com/yourusername/realtime-banking-cdc-pipeline/blob/main/docs/images/screenshot-banking-pipeline.png" title="Detailed system architecture" />
-- <LinkWithLabel label="DBT Documentation" href="https://yourusername.github.io/realtime-banking-cdc-pipeline/dbt-docs" title="Data model documentation" />
+- <LinkWithLabel label="GitHub Repository" href="https://github.com/JeffWilliams2/realtime-banking-cdc-pipeline" title="Source code and documentation" />
+- <LinkWithLabel label="Architecture Diagram" href="https://github.com/JeffWilliams2/realtime-banking-cdc-pipeline/blob/main/docs/images/screenshot-banking-pipeline.png" title="Detailed system architecture" />
+- <LinkWithLabel label="DBT Documentation" href="https://JeffWilliams2.github.io/realtime-banking-cdc-pipeline/dbt-docs" title="Data model documentation" />
