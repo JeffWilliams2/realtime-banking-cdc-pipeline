@@ -1,0 +1,25 @@
+banking_dbt:
+  target: dev
+  outputs:
+    dev:
+      type: snowflake
+      account: "{{ env_var('SNOWFLAKE_ACCOUNT') }}"
+      user: "{{ env_var('SNOWFLAKE_USER') }}"
+      password: "{{ env_var('SNOWFLAKE_PASSWORD') }}"
+      role: "{{ env_var('SNOWFLAKE_ROLE') }}"
+      database: BANKING_CDC
+      warehouse: TRANSFORM_WH
+      schema: RAW
+      threads: 4
+      client_session_keep_alive: False
+    prod:
+      type: snowflake
+      account: "{{ env_var('SNOWFLAKE_ACCOUNT') }}"
+      user: "{{ env_var('SNOWFLAKE_USER') }}"
+      password: "{{ env_var('SNOWFLAKE_PASSWORD') }}"
+      role: "{{ env_var('SNOWFLAKE_ROLE') }}"
+      database: BANKING_CDC
+      warehouse: ANALYTICS_WH
+      schema: GOLD
+      threads: 8
+      client_session_keep_alive: False
