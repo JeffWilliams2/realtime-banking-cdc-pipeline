@@ -214,14 +214,11 @@ sources:
 SELECT transaction_id
 FROM {{ ref('fact_transactions') }}
 WHERE account_id NOT IN (SELECT account_id FROM {{ ref('dim_accounts') }})
-```
 
-**3. Snapshot Validity Tests**
-```sql
--- Ensure SCD Type-2 snapshots have no overlapping valid periods
-SELECT account_id, COUNT(*)
+-- tests/assert_unique_current_records.sql  
+SELECT account_id
 FROM {{ ref('dim_accounts') }}
-WHERE valid_to IS NULL
+WHERE dbt_valid_to IS NULL
 GROUP BY account_id
 HAVING COUNT(*) > 1
 ```
@@ -257,7 +254,7 @@ HAVING COUNT(*) > 1
 ### Testing in CI/CD Pipeline
 
 ```yaml
-# .github/workflows/ci.yml
+# .github/workflows/ci.yaml
 - name: Run DBT Tests
   run: |
     dbt deps
@@ -524,52 +521,45 @@ LIMIT 10;
 
 ```
 realtime-banking-cdc-pipeline/
-├── .github/
-│   └── workflows/
-│       ├── ci.yml              # CI: DBT tests, linting
-│       └── cd.yml              # CD: Deploy to production
-├── banking_dbt/                # DBT project
+├── banking_dbt/                        # DBT project
 │   ├── models/
-│   │   ├── sources.yml         # Source definitions with tests
-│   │   ├── staging/            # Bronze → Silver transformations
+│   │   ├── sources.yml                 # Source definitions with tests
+│   │   ├── staging/                    # Bronze → Silver transformations
 │   │   │   ├── stg_customers.sql
 │   │   │   ├── stg_accounts.sql
 │   │   │   └── stg_transactions.sql
-│   │   └── marts/              # Silver → Gold (dimensional models)
+│   │   └── marts/                      # Silver → Gold (dimensional models)
 │   │       ├── dimensions/
-│   │       │   ├── dim_customers.sql  # SCD Type-2
-│   │       │   └── dim_accounts.sql   # SCD Type-2
+│   │       │   ├── dim_customers.sql   # SCD Type-2
+│   │       │   └── dim_accounts.sql    # SCD Type-2
 │   │       └── facts/
 │   │           └── fact_transactions.sql
-│   ├── snapshots/              # SCD Type-2 snapshot strategy
+│   ├── snapshots/                      # SCD Type-2 snapshot strategy
 │   │   ├── customers_snapshot.sql
 │   │   └── accounts_snapshot.sql
-│   ├── tests/                  # Custom data quality tests
-│   ├── dbt_project.yml         # DBT configuration
-│   └── profiles.yml            # Snowflake connection (gitignored)
+│   ├── tests/                          # Custom data quality tests
+│   │   ├── assert_no_orphan_transactions.sql
+│   │   └── assert_unique_current_records.sql
+│   ├── dbt_project.yml                 # DBT configuration
+│   └── profiles.yml.example            # Snowflake connection template
 ├── consumer/
-│   └── kafka_to_minio.py       # Python: Consume Kafka → batch to MinIO
+│   └── kafka_to_minio.py               # Python: Consume Kafka → batch to MinIO
 ├── data-generator/
-│   └── fake_generator.py       # Synthetic banking data generator
+│   └── fake_generator.py               # Synthetic banking data generator
 ├── docker/
-│   ├── dags/                   # Airflow DAGs
-│   │   ├── minio_to_snowflake_dag.py  # Load Bronze layer
-│   │   └── scd_snapshots.py    # Trigger DBT snapshots
-│   └── plugins/                # Airflow custom operators
+│   └── dags/                           # Airflow DAGs
+│       ├── minio_to_snowflake_dag.py   # Load Bronze layer
+│       └── scd_snapshots.py            # Trigger DBT snapshots
 ├── kafka-debezium/
 │   └── generate_and_post_connector.py  # Auto-config Debezium connector
 ├── postgres/
-│   ├── schema.sql              # OLTP table definitions
-│   └── seed_data.sql           # Initial test data
+│   └── schema.sql                      # OLTP table definitions
 ├── docs/
-│   └── images/
-│       └── screenshot-banking-pipeline.png  # Architecture diagram
-├── .gitignore
-├── docker-compose.yml          # Local infrastructure (Kafka, Postgres, Airflow)
-├── dockerfile-airflow.dockerfile  # Custom Airflow image with DBT
-├── requirements.txt            # Python dependencies
-├── readme.md                   # This file
-└── blog-post.md                # Extended blog post version
+│   └── images/                         # Architecture diagrams
+├── docker-compose.yml                  # Local infrastructure (Kafka, Postgres, Airflow)
+├── dockerfile-airflow.dockerfile       # Custom Airflow image with DBT
+├── requirements.txt                    # Python dependencies
+└── readme.md
 
 ```
 
@@ -682,7 +672,7 @@ dbt docs generate && dbt docs serve  # View documentation
 - **Airflow:** http://localhost:8080 (user: `admin`, pass: `admin`)
 - **Kafka Manager:** http://localhost:9000
 - **MinIO Console:** http://localhost:9001 (user: `minioadmin`, pass: `minioadmin`)
-- **DBT Docs:** http://localhost:8080
+- **DBT Docs:** http://localhost:8081 (after running `dbt docs serve`)
 
 ### 8. Monitor Pipeline
 ```bash
