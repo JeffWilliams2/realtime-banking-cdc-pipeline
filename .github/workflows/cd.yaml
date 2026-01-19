@@ -1,8 +1,10 @@
 name: CD
 
+# Manual trigger only - configure secrets before enabling auto-run
 on:
-  push:
-    branches: [ main ]   # deploy only from main
+  workflow_dispatch:  # Run manually from GitHub Actions tab
+  # push:
+  #   branches: [ main ]   # deploy only from main
 
 jobs:
   deploy:

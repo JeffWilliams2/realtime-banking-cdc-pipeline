@@ -1,10 +1,12 @@
 name: CI
 
+# Manual trigger only - configure secrets before enabling auto-run
 on:
-  push:
-    branches: [ main, dev ]
-  pull_request:
-    branches: [ main ]
+  workflow_dispatch:  # Run manually from GitHub Actions tab
+  # push:
+  #   branches: [ main, dev ]
+  # pull_request:
+  #   branches: [ main ]
 
 jobs:
   tests:
